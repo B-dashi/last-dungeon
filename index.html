@@ -3,19 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#090b10">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Last Dungeon Mobile</title>
+<meta name="apple-mobile-web-app-title" content="Last Dungeon">
+<title>Last Dungeon</title>
 
 <style>
 :root{
+  --app-top:0px;
+  --app-height:100vh;
+
   --bg:#090b10;
   --panel:#151924;
   --panel2:#202637;
   --text:#f7f8fb;
   --muted:#9da7bb;
+
   --gold:#ffd66b;
-  --hp:#ff5466;
   --good:#76e6a8;
   --purple:#c6a5ff;
 }
@@ -25,277 +31,454 @@
   -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
   margin:0;
+
   width:100%;
   height:100%;
+
+  overflow:hidden;
+
   background:var(--bg);
   color:var(--text);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  overflow:hidden;
-  overscroll-behavior:none;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   -webkit-text-size-adjust:100%;
+
+  overscroll-behavior:none;
 }
 
 button{
   font:inherit;
+
   -webkit-appearance:none;
   appearance:none;
+
   touch-action:manipulation;
 }
 
-/* GANZE APP PASST SICH AN DEN BILDSCHIRM AN */
-.app{
+
+/* EXAKT GEMESSENER SICHTBARER BEREICH */
+
+.viewport-host{
   position:fixed;
-  inset:0;
+
+  left:0;
+
+  top:var(--app-top);
 
   width:100%;
+  height:var(--app-height);
+
+  overflow:hidden;
+}
+
+
+.app{
+  width:100%;
   max-width:430px;
+
+  height:100%;
+
   margin:0 auto;
 
   overflow:hidden;
 
   display:grid;
-  grid-template-rows:auto minmax(0,1fr) auto;
 
-  padding:0 10px;
+  grid-template-rows:
+    auto
+    minmax(0,1fr)
+    auto;
+
+  padding:
+    6px
+    10px
+    6px;
 
   background:
+
     radial-gradient(
       circle at 50% -10%,
       rgba(106,82,160,.32),
       transparent 35%
     ),
-    linear-gradient(#121722,#080a0f);
-}
 
-/* OBEN: automatisch unter Dynamic Island */
-.top{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:6px;
-
-  margin:0 -10px 6px;
-
-  padding:
-    max(8px,env(safe-area-inset-top))
-    10px
-    0;
-
-  background:
     linear-gradient(
       #121722,
-      rgba(18,23,34,.65),
-      transparent
+      #080a0f
     );
 }
 
+
+/* OBERE LEISTE */
+
+.top{
+  display:grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr;
+
+  gap:6px;
+
+  margin-bottom:6px;
+}
+
+
 .pill{
-  background:rgba(255,255,255,.065);
-  border:1px solid rgba(255,255,255,.08);
+  background:
+    rgba(255,255,255,.065);
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
   border-radius:12px;
+
   padding:6px;
+
   text-align:center;
+
   font-weight:900;
+
   font-size:12px;
 }
+
 
 .gold{
   color:var(--gold);
 }
 
+
 .souls{
   color:var(--purple);
 }
 
+
+/* SEITEN */
+
 .screen{
   display:none;
+
   min-height:0;
+
   overflow:hidden;
 }
+
 
 .screen.active{
   display:grid;
 }
 
+
 #fightScreen{
-  grid-template-rows:minmax(0,1fr) auto auto;
+  grid-template-rows:
+    minmax(0,1fr)
+    auto
+    auto;
+
   gap:6px;
 }
 
-/* KAMPFARENA */
+
+/* ARENA */
+
 .arena{
   min-height:0;
+
   position:relative;
+
   overflow:hidden;
 
   border-radius:20px;
-  border:1px solid rgba(255,255,255,.09);
+
+  border:
+    1px solid
+    rgba(255,255,255,.09);
 
   background:
+
     radial-gradient(
       circle at 50% 58%,
       rgba(112,106,169,.22),
       transparent 34%
     ),
+
     linear-gradient(
       #202637 0 67%,
       #10131a 67%
     );
 
-  box-shadow:0 16px 34px rgba(0,0,0,.4);
+  box-shadow:
+    0 16px 34px
+    rgba(0,0,0,.4);
 }
 
+
 .enemyHead{
-  padding:9px 10px 0;
+  padding:
+    9px
+    10px
+    0;
+
   position:relative;
+
   z-index:4;
 }
 
+
 .enemyRow{
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
 }
 
+
 .enemyName{
   font-weight:1000;
+
   font-size:15px;
 }
 
+
 .enemyType{
   font-size:9px;
+
   font-weight:1000;
-  padding:3px 7px;
+
+  padding:
+    3px
+    7px;
+
   border-radius:999px;
-  background:rgba(255,255,255,.07);
+
+  background:
+    rgba(255,255,255,.07);
 }
+
 
 .arena.boss .enemyType{
   background:#802638;
 }
 
+
+/* LEBENSBALKEN */
+
 .bar{
   height:17px;
+
   background:#080a0e;
+
   border-radius:999px;
+
   overflow:hidden;
+
   position:relative;
 
-  border:1px solid rgba(255,255,255,.07);
+  border:
+    1px solid
+    rgba(255,255,255,.07);
+
   margin-top:5px;
 }
 
+
 .fill{
   height:100%;
-  transition:width .13s linear;
+
+  transition:
+    width .13s linear;
 }
+
 
 .enemyFill{
-  background:linear-gradient(90deg,#ff4358,#ff785f);
+  background:
+    linear-gradient(
+      90deg,
+      #ff4358,
+      #ff785f
+    );
 }
 
+
 .playerFill{
-  background:linear-gradient(90deg,#36c76f,#80e5a3);
+  background:
+    linear-gradient(
+      90deg,
+      #36c76f,
+      #80e5a3
+    );
 }
+
 
 .barText{
   position:absolute;
+
   inset:0;
 
   display:grid;
+
   place-items:center;
 
   font-size:10px;
+
   font-weight:1000;
 
-  text-shadow:0 1px 3px #000;
+  text-shadow:
+    0 1px 3px #000;
 }
+
+
+/* SCHWERER ANGRIFF */
 
 .telegraph{
   height:18px;
+
   text-align:center;
+
   font-size:10px;
+
   font-weight:1000;
+
   color:#ffb3a8;
+
   opacity:0;
 }
 
+
 .telegraph.show{
   opacity:1;
-  animation:pulse .45s infinite alternate;
+
+  animation:
+    pulse .45s
+    infinite alternate;
 }
 
+
 @keyframes pulse{
+
   to{
-    transform:scale(1.04);
+    transform:
+      scale(1.04);
+
     color:#fff;
   }
+
 }
+
+
+/* GEGNER */
 
 .enemyBtn{
   position:absolute;
-  inset:68px 0 74px;
+
+  inset:
+    68px
+    0
+    74px;
 
   width:100%;
 
   border:0;
+
   background:transparent;
+
   color:white;
 
   display:grid;
+
   place-items:center;
 
   cursor:pointer;
+
   z-index:3;
 }
 
+
 .enemyEmoji{
-  font-size:clamp(78px,17vh,118px);
+  font-size:
+    clamp(
+      72px,
+      16vh,
+      116px
+    );
+
   line-height:1;
 
   user-select:none;
 
   filter:
     drop-shadow(
-      0 15px 15px rgba(0,0,0,.45)
+      0
+      15px
+      15px
+      rgba(0,0,0,.45)
     );
 }
 
+
 .enemyEmoji.hit{
-  animation:hit .18s ease;
+  animation:
+    hit .18s ease;
 }
+
 
 .enemyEmoji.attack{
-  animation:attack .28s ease;
+  animation:
+    attack .28s ease;
 }
 
+
 @keyframes hit{
+
   40%{
+
     transform:
       translateX(-10px)
       rotate(-4deg)
       scale(.94);
 
-    filter:brightness(1.8);
+    filter:
+      brightness(1.8);
   }
 
+
   75%{
+
     transform:
       translateX(6px)
       rotate(3deg);
   }
+
 }
 
+
 @keyframes attack{
+
   50%{
+
     transform:
       translateY(25px)
       scale(1.1);
+
   }
+
 }
 
-/* SCHWERT-EFFEKT */
+
+/* SCHWERT */
+
 .slash{
   position:absolute;
 
@@ -308,6 +491,7 @@ button{
   border-radius:50%;
 
   background:
+
     linear-gradient(
       90deg,
       transparent,
@@ -317,87 +501,126 @@ button{
     );
 
   transform:
+
     translate(-50%,-50%)
     rotate(-30deg)
     scaleX(0);
 
   opacity:0;
+
   z-index:8;
 }
 
+
 .slash.go{
-  animation:slash .22s ease-out;
+
+  animation:
+    slash .22s ease-out;
+
 }
 
+
 @keyframes slash{
+
   0%{
+
     opacity:0;
 
     transform:
+
       translate(-50%,-50%)
       rotate(-30deg)
       scaleX(.15);
+
   }
+
 
   35%{
     opacity:1;
   }
 
+
   100%{
+
     opacity:0;
 
     transform:
+
       translate(-50%,-50%)
       rotate(-30deg)
       scaleX(1.35);
+
   }
+
 }
 
+
 /* FEUERBALL */
+
 .fireball{
   position:absolute;
 
   left:16%;
+
   bottom:74px;
 
   font-size:34px;
 
   opacity:0;
+
   z-index:9;
 }
 
+
 .fireball.go{
+
   animation:
+
     fire .55s
     cubic-bezier(.2,.7,.2,1);
+
 }
 
+
 @keyframes fire{
+
   0%{
+
     opacity:1;
+
     transform:
       translate(0,0)
       scale(.5);
+
   }
 
+
   70%{
+
     opacity:1;
 
     transform:
       translate(195px,-135px)
       scale(1.2);
+
   }
 
+
   100%{
+
     opacity:0;
 
     transform:
       translate(218px,-158px)
       scale(1.7);
+
   }
+
 }
 
+
 /* SPIELER */
+
 .playerCard{
   position:absolute;
 
@@ -416,59 +639,82 @@ button{
 
   border-radius:14px;
 
-  padding:6px 8px;
+  padding:
+    6px
+    8px;
 }
+
 
 .playerRow{
   display:flex;
+
   align-items:center;
+
   gap:7px;
 }
+
 
 .hero{
   font-size:27px;
 }
 
+
 .playerInfo{
   flex:1;
+
   min-width:0;
 }
 
+
 .playerName{
   display:flex;
+
   justify-content:space-between;
+
   gap:7px;
 
   font-size:11px;
+
   font-weight:1000;
 }
 
+
 .playerStats{
   font-size:9px;
+
   color:var(--muted);
 
   white-space:nowrap;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
 
   margin-top:2px;
 }
 
+
+/* TEXT */
+
 .message{
   min-height:23px;
 
   display:grid;
+
   place-items:center;
 
   text-align:center;
 
   font-weight:900;
+
   font-size:11px;
 
   color:var(--good);
 }
 
+
 /* FÄHIGKEITEN */
+
 .actions{
   display:grid;
 
@@ -477,6 +723,7 @@ button{
 
   gap:5px;
 }
+
 
 .ability{
   min-height:62px;
@@ -488,6 +735,7 @@ button{
   border-radius:13px;
 
   background:
+
     linear-gradient(
       #252c3c,
       #191e29
@@ -495,32 +743,43 @@ button{
 
   color:#fff;
 
-  padding:5px 3px;
+  padding:
+    5px
+    3px;
 
   position:relative;
+
   overflow:hidden;
 
   font-weight:1000;
 }
 
+
 .ability .icon{
   display:block;
+
   font-size:21px;
 }
+
 
 .ability .label{
   font-size:10px;
 }
 
+
 .ability .sub{
   font-size:8px;
+
   color:var(--muted);
+
   margin-top:1px;
 }
+
 
 .ability:disabled{
   opacity:.48;
 }
+
 
 .cool{
   position:absolute;
@@ -537,54 +796,73 @@ button{
   pointer-events:none;
 }
 
+
 .cdtext{
   position:absolute;
+
   inset:0;
 
   display:grid;
+
   place-items:center;
 
   font-size:15px;
+
   font-weight:1000;
 
   pointer-events:none;
 }
 
-/* SHOP / STATUS */
+
+/* SHOP UND STATUS */
+
 #shopScreen,
 #statusScreen{
+
   grid-template-rows:
-    auto 1fr;
+    auto
+    1fr;
 
   gap:7px;
 }
 
+
 .panelTitle{
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
 
   font-weight:1000;
+
   font-size:15px;
 }
 
+
 .panelTitle small{
   font-size:10px;
+
   color:var(--muted);
+
   font-weight:700;
 }
 
+
 .cards{
   display:grid;
+
   gap:7px;
 
   align-content:start;
 
   min-height:0;
+
   overflow:auto;
 
   padding-bottom:4px;
 }
+
 
 .card{
   border:
@@ -592,19 +870,23 @@ button{
     rgba(255,255,255,.08);
 
   background:
+
     linear-gradient(
       #232a38,
       #171c26
     );
 
   border-radius:14px;
+
   padding:10px;
 }
+
 
 .shopBtn{
   width:100%;
 
   border:0;
+
   background:transparent;
 
   color:#fff;
@@ -614,27 +896,35 @@ button{
   display:grid;
 
   grid-template-columns:
-    1fr auto;
+    1fr
+    auto;
 
   gap:8px;
 
   text-align:left;
 }
 
+
 .shopBtn:disabled{
   opacity:.42;
 }
 
+
 .main{
   font-size:13px;
+
   font-weight:1000;
 }
 
+
 .sub{
   font-size:10px;
+
   color:var(--muted);
+
   margin-top:3px;
 }
+
 
 .price{
   align-self:center;
@@ -642,15 +932,19 @@ button{
   color:var(--gold);
 
   font-size:12px;
+
   font-weight:1000;
 
-  padding:6px 8px;
+  padding:
+    6px
+    8px;
 
   border-radius:9px;
 
   background:
     rgba(255,214,107,.08);
 }
+
 
 .statGrid{
   display:grid;
@@ -660,6 +954,7 @@ button{
 
   gap:7px;
 }
+
 
 .statBox{
   background:var(--panel);
@@ -673,25 +968,31 @@ button{
   padding:9px;
 }
 
+
 .statBox span{
   font-size:9px;
+
   color:var(--muted);
 
   display:block;
 }
 
+
 .statBox b{
   font-size:14px;
 }
+
 
 .saveRow{
   display:grid;
 
   grid-template-columns:
-    1fr 1fr;
+    1fr
+    1fr;
 
   gap:7px;
 }
+
 
 .smallBtn{
   border:
@@ -699,6 +1000,7 @@ button{
     rgba(255,255,255,.08);
 
   background:#171c26;
+
   color:#fff;
 
   border-radius:12px;
@@ -706,11 +1008,13 @@ button{
   padding:10px;
 
   font-size:11px;
+
   font-weight:900;
 }
 
-/* UNTERE NAVIGATION
-   Safe Area für Home-Balken wird automatisch genutzt */
+
+/* NAVIGATION */
+
 .nav{
   display:grid;
 
@@ -719,20 +1023,9 @@ button{
 
   gap:6px;
 
-  margin:0 -10px;
-
-  padding:
-    6px
-    10px
-    max(6px,env(safe-area-inset-bottom));
-
-  background:
-    linear-gradient(
-      transparent,
-      rgba(8,10,15,.92) 24%,
-      #080a0f
-    );
+  padding-top:6px;
 }
+
 
 .nav button{
   border:
@@ -740,22 +1033,30 @@ button{
     rgba(255,255,255,.08);
 
   background:#121720;
+
   color:var(--muted);
 
   border-radius:12px;
 
-  padding:7px 4px;
+  padding:
+    7px
+    4px;
 
   font-size:10px;
+
   font-weight:1000;
 }
 
+
 .nav button.active{
   background:#2a3143;
+
   color:#fff;
 }
 
+
 /* SCHADENSZAHLEN */
+
 .float{
   position:absolute;
 
@@ -764,6 +1065,7 @@ button{
   pointer-events:none;
 
   font-weight:1000;
+
   font-size:20px;
 
   animation:
@@ -774,76 +1076,108 @@ button{
     0 2px 5px #000;
 }
 
+
 .float.crit{
   font-size:27px;
+
   color:#ffe071;
 }
+
 
 .float.enemyDmg{
   color:#ff9d9d;
 }
 
+
 .float.goldText{
   font-size:14px;
+
   color:var(--gold);
 }
+
 
 .float.heal{
   color:#86ffae;
 }
 
+
 @keyframes floatUp{
+
   from{
+
     opacity:1;
 
     transform:
       translate(-50%,0)
       scale(.85);
+
   }
 
+
   to{
+
     opacity:0;
 
     transform:
       translate(-50%,-62px)
       scale(1.15);
+
   }
+
 }
 
-/* BILDSCHIRM-EFFEKTE */
+
+/* BLITZ */
+
 .flash{
   position:fixed;
+
   inset:0;
 
   pointer-events:none;
 
   opacity:0;
+
   z-index:30;
 }
 
+
 #damageFlash{
+
   background:
+
     radial-gradient(
       circle,
       transparent 45%,
       rgba(255,35,35,.34)
     );
+
 }
 
+
 #healFlash{
+
   background:
+
     radial-gradient(
       circle,
       rgba(80,255,145,.16),
       transparent 60%
     );
+
 }
+
 
 .flash.go{
-  animation:flash .35s ease;
+
+  animation:
+    flash .35s ease;
+
 }
 
+
 @keyframes flash{
+
   40%{
     opacity:1;
   }
@@ -851,14 +1185,20 @@ button{
   to{
     opacity:0;
   }
+
 }
+
 
 .shake{
+
   animation:
     shake .24s linear;
+
 }
 
+
 @keyframes shake{
+
   20%{
     transform:
       translate(-5px,1px);
@@ -878,17 +1218,22 @@ button{
     transform:
       translate(3px,-1px);
   }
+
 }
 
-/* TODESFENSTER */
+
+/* TOD */
+
 .overlay{
   position:fixed;
+
   inset:0;
 
   background:
     rgba(4,6,10,.86);
 
   display:none;
+
   place-items:center;
 
   padding:18px;
@@ -899,14 +1244,21 @@ button{
     blur(7px);
 }
 
+
 .overlay.show{
   display:grid;
 }
 
+
 .modal{
-  width:min(390px,100%);
+  width:
+    min(
+      390px,
+      100%
+    );
 
   background:
+
     linear-gradient(
       #202738,
       #141821
@@ -923,22 +1275,31 @@ button{
   text-align:center;
 }
 
+
 .modal h2{
-  margin:0 0 5px;
+  margin:
+    0
+    0
+    5px;
 }
+
 
 .modal p{
   font-size:12px;
+
   color:var(--muted);
 }
+
 
 .modalBtn{
   width:100%;
 
   border:0;
+
   border-radius:13px;
 
   padding:12px;
+
   margin-top:8px;
 
   background:#6852b2;
@@ -948,10 +1309,13 @@ button{
   font-weight:1000;
 }
 
+
 .perm{
   display:grid;
+
   gap:6px;
 }
+
 
 .perm button{
   border:
@@ -959,6 +1323,7 @@ button{
     rgba(255,255,255,.08);
 
   background:#171c27;
+
   color:#fff;
 
   border-radius:11px;
@@ -966,61 +1331,134 @@ button{
   padding:8px;
 
   display:flex;
+
   justify-content:space-between;
 
   text-align:left;
 }
 
+
 .perm button:disabled{
   opacity:.4;
 }
 
-/* KLEINERE HANDYS */
-@media (max-height:720px){
 
-  .top{
-    margin-bottom:4px;
+/* AUTOMATISCH KOMPAKTER */
 
-    padding-top:
-      max(
-        6px,
-        env(safe-area-inset-top)
-      );
-  }
+body[data-size="compact"] .app{
+  padding-top:4px;
+  padding-bottom:4px;
+}
 
-  .pill{
-    padding:4px;
-    font-size:10px;
-  }
 
-  .enemyHead{
-    padding-top:6px;
-  }
+body[data-size="compact"] .pill{
+  padding:4px;
 
-  .enemyBtn{
-    inset:
-      58px 0 65px;
-  }
+  font-size:10px;
+}
 
-  .playerCard{
-    padding:4px 6px;
-  }
 
-  .ability{
-    min-height:52px;
-  }
+body[data-size="compact"] .top{
+  margin-bottom:4px;
+}
 
-  .ability .icon{
-    font-size:18px;
-  }
 
-  .message{
-    min-height:19px;
-  }
+body[data-size="compact"] .enemyHead{
+  padding-top:6px;
+}
+
+
+body[data-size="compact"] .enemyBtn{
+  inset:
+    58px
+    0
+    66px;
+}
+
+
+body[data-size="compact"] .ability{
+  min-height:54px;
+}
+
+
+body[data-size="compact"] .ability .icon{
+  font-size:18px;
+}
+
+
+body[data-size="compact"] .message{
+  min-height:19px;
+}
+
+
+/* SEHR KLEINE HÖHE */
+
+body[data-size="tiny"] .app{
+  padding:
+    3px
+    8px;
+}
+
+
+body[data-size="tiny"] .pill{
+  padding:3px;
+
+  font-size:9px;
+}
+
+
+body[data-size="tiny"] .enemyBtn{
+  inset:
+    54px
+    0
+    61px;
+}
+
+
+body[data-size="tiny"] .enemyEmoji{
+
+  font-size:
+    clamp(
+      64px,
+      14vh,
+      96px
+    );
+
+}
+
+
+body[data-size="tiny"] .ability{
+  min-height:49px;
+
+  padding:
+    3px
+    2px;
+}
+
+
+body[data-size="tiny"] .ability .icon{
+  font-size:17px;
+}
+
+
+body[data-size="tiny"] .message{
+  min-height:17px;
+
+  font-size:10px;
+}
+
+
+body[data-size="tiny"] .nav button{
+  padding:
+    5px
+    3px;
+
+  font-size:9px;
 }
 
 </style>
 </head>
+
 
 <body>
 
@@ -1035,76 +1473,129 @@ button{
 </div>
 
 
+<!-- MISST DIE IPHONE SAFE AREA -->
+
+<div
+  id="safeProbe"
+
+  style="
+    position:fixed;
+    visibility:hidden;
+    pointer-events:none;
+    left:0;
+    top:0;
+    width:0;
+    height:0;
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
+  ">
+</div>
+
+
+<!-- SICHTBARER BEREICH -->
+
+<div
+  class="viewport-host"
+  id="viewportHost">
+
+
 <main
   class="app"
   id="app">
 
-  <!-- OBERE LEISTE -->
+
+  <!-- OBEN -->
+
   <div class="top">
 
     <div class="pill">
+
       🗺️
+
       <span id="floor">
         1
       </span>
+
     </div>
 
+
     <div class="pill gold">
+
       🪙
+
       <span id="gold">
         0
       </span>
+
     </div>
 
+
     <div class="pill souls">
+
       🔮
+
       <span id="souls">
         0
       </span>
+
     </div>
 
   </div>
 
 
   <!-- KAMPF -->
+
   <section
     class="screen active"
     id="fightScreen">
+
 
     <div
       class="arena"
       id="arena">
 
+
       <div class="enemyHead">
 
+
         <div class="enemyRow">
+
 
           <div
             class="enemyName"
             id="enemyName">
+
             Dungeon-Ratte
+
           </div>
+
 
           <div
             class="enemyType"
             id="enemyType">
+
             NORMAL
+
           </div>
+
 
         </div>
 
 
         <div class="bar">
 
+
           <div
             class="fill enemyFill"
             id="enemyHpFill">
           </div>
 
+
           <div
             class="barText"
             id="enemyHpText">
           </div>
+
 
         </div>
 
@@ -1112,76 +1603,108 @@ button{
         <div
           class="telegraph"
           id="telegraph">
+
           ⚠️ Schwerer Angriff!
+
         </div>
+
 
       </div>
 
 
       <button
         class="enemyBtn"
-        id="enemyBtn">
+        id="enemyBtn"
+
+        aria-label="Gegner angreifen">
+
 
         <div
           class="enemyEmoji"
           id="enemyEmoji">
+
           🐀
+
         </div>
+
 
         <div
           class="slash"
           id="slash">
         </div>
 
+
         <div
           class="fireball"
           id="fireball">
+
           🔥
+
         </div>
+
 
       </button>
 
 
+      <!-- SPIELER -->
+
+
       <div class="playerCard">
+
 
         <div class="playerRow">
 
+
           <div class="hero">
+
             🧙‍♂️
+
           </div>
 
 
           <div class="playerInfo">
 
+
             <div class="playerName">
 
+
               <span>
+
                 Der letzte Wanderer
+
               </span>
 
+
               <span id="armorText">
+
                 🛡️ 0
+
               </span>
+
 
             </div>
 
 
             <div
               class="bar"
+
               style="
                 height:15px;
                 margin-top:4px;
               ">
+
 
               <div
                 class="fill playerFill"
                 id="playerHpFill">
               </div>
 
+
               <div
                 class="barText"
                 id="playerHpText">
               </div>
+
 
             </div>
 
@@ -1191,11 +1714,15 @@ button{
               id="playerStats">
             </div>
 
+
           </div>
+
 
         </div>
 
+
       </div>
+
 
     </div>
 
@@ -1203,37 +1730,55 @@ button{
     <div
       class="message"
       id="message">
+
       Tippe auf den Gegner.
+
     </div>
 
 
+    <!-- FÄHIGKEITEN -->
+
+
     <div class="actions">
+
 
       <button
         class="ability"
         id="blockBtn">
 
+
         <span class="icon">
+
           🛡️
+
         </span>
+
 
         <span class="label">
+
           Block
+
         </span>
 
+
         <div class="sub">
+
           -70%
+
         </div>
+
 
         <div
           class="cool"
           id="blockCd">
         </div>
 
+
         <div
           class="cdtext"
           id="blockCdText">
         </div>
+
 
       </button>
 
@@ -1242,27 +1787,39 @@ button{
         class="ability"
         id="fireBtn">
 
+
         <span class="icon">
+
           🔥
+
         </span>
+
 
         <span class="label">
+
           Feuer
+
         </span>
 
+
         <div class="sub">
+
           5×
+
         </div>
+
 
         <div
           class="cool"
           id="fireCd">
         </div>
 
+
         <div
           class="cdtext"
           id="fireCdText">
         </div>
+
 
       </button>
 
@@ -1271,27 +1828,39 @@ button{
         class="ability"
         id="healBtn">
 
+
         <span class="icon">
+
           ✨
+
         </span>
+
 
         <span class="label">
+
           Heilen
+
         </span>
 
+
         <div class="sub">
+
           35%
+
         </div>
+
 
         <div
           class="cool"
           id="healCd">
         </div>
 
+
         <div
           class="cdtext"
           id="healCdText">
         </div>
+
 
       </button>
 
@@ -1300,42 +1869,65 @@ button{
         class="ability"
         id="potionBtn">
 
+
         <span class="icon">
+
           🧪
+
         </span>
+
 
         <span class="label">
+
           Trank
+
         </span>
 
+
         <div class="sub">
+
           ×
+
           <span id="potions">
             1
           </span>
+
         </div>
+
 
       </button>
 
+
     </div>
+
 
   </section>
 
 
   <!-- SHOP -->
+
+
   <section
     class="screen"
     id="shopScreen">
 
+
     <div class="panelTitle">
 
+
       <span>
+
         ⚒️ Händler
+
       </span>
 
+
       <small>
+
         nur dieser Run
+
       </small>
+
 
     </div>
 
@@ -1345,129 +1937,185 @@ button{
 
       <div class="card">
 
+
         <button
           class="shopBtn"
           id="dmgBtn">
 
+
           <div>
 
+
             <div class="main">
+
               ⚔️ Waffe verstärken
+
             </div>
+
 
             <div class="sub">
+
               +2 Schaden
+
             </div>
 
+
           </div>
+
 
           <div
             class="price"
             id="dmgPrice">
           </div>
 
+
         </button>
+
 
       </div>
 
 
       <div class="card">
 
+
         <button
           class="shopBtn"
           id="hpBtn">
 
+
           <div>
 
+
             <div class="main">
+
               ❤️ Vitalität
+
             </div>
+
 
             <div class="sub">
+
               +15 Max-Leben,
               heilt 15
+
             </div>
 
+
           </div>
+
 
           <div
             class="price"
             id="hpPrice">
           </div>
 
+
         </button>
+
 
       </div>
 
 
       <div class="card">
 
+
         <button
           class="shopBtn"
           id="armorBtn">
 
+
           <div>
 
+
             <div class="main">
+
               🛡️ Rüstung
+
             </div>
+
 
             <div class="sub">
+
               reduziert jeden Treffer
+
             </div>
 
+
           </div>
+
 
           <div
             class="price"
             id="armorPrice">
           </div>
 
+
         </button>
+
 
       </div>
 
 
       <div class="card">
 
+
         <div class="main">
+
           🎒 Run-Beute
+
         </div>
+
 
         <div
           class="sub"
           id="runBonuses"
+
           style="
             font-size:13px;
             margin-top:8px;
           ">
+
           🗡️ 0 ·
           🛡️ 0 ·
           💍 0 ·
           🧪 1
+
         </div>
+
 
       </div>
 
+
     </div>
+
 
   </section>
 
 
   <!-- STATUS -->
+
+
   <section
     class="screen"
     id="statusScreen">
 
+
     <div class="panelTitle">
 
+
       <span>
+
         📊 Status
+
       </span>
 
+
       <small>
+
         Run & Speicherstand
+
       </small>
+
 
     </div>
 
@@ -1477,141 +2125,240 @@ button{
 
       <div class="statGrid">
 
+
         <div class="statBox">
 
+
           <span>
+
             Schaden
+
           </span>
+
 
           <b id="statDamage">
+
             5
+
           </b>
+
 
         </div>
 
 
         <div class="statBox">
 
+
           <span>
+
             Krit
+
           </span>
+
 
           <b id="statCrit">
+
             5%
+
           </b>
+
 
         </div>
 
 
         <div class="statBox">
 
+
           <span>
+
             Rüstung
+
           </span>
+
 
           <b id="statArmor">
+
             0
+
           </b>
+
 
         </div>
 
 
         <div class="statBox">
 
+
           <span>
+
             Run
+
           </span>
 
+
           <b id="runNumber">
+
             1
+
           </b>
 
+
         </div>
+
 
       </div>
 
 
+      <!-- DEBUG / MESSUNG -->
+
+
       <div class="card">
 
+
         <div class="main">
-          💾 Speichern
+
+          📱 Bildschirm-Messung
+
         </div>
 
+
+        <div
+          class="sub"
+          id="viewportInfo">
+
+          wird gemessen …
+
+        </div>
+
+
+      </div>
+
+
+      <!-- SPEICHERN -->
+
+
+      <div class="card">
+
+
+        <div class="main">
+
+          💾 Speichern
+
+        </div>
+
+
         <div class="sub">
-          Das Spiel speichert
-          zusätzlich automatisch
+
+          Autosave zusätzlich
           alle 10 Sekunden.
+
         </div>
 
 
         <div
           class="saveRow"
+
           style="
             margin-top:9px;
           ">
 
+
           <button
             class="smallBtn"
             id="saveBtn">
+
             Jetzt speichern
+
           </button>
+
 
           <button
             class="smallBtn"
             id="resetBtn">
+
             Alles löschen
+
           </button>
+
 
         </div>
 
+
       </div>
 
+
     </div>
+
 
   </section>
 
 
   <!-- NAVIGATION -->
+
+
   <nav class="nav">
+
 
     <button
       class="active"
       data-tab="fightScreen">
+
       ⚔️ Kampf
+
     </button>
+
 
     <button
       data-tab="shopScreen">
+
       ⚒️ Shop
+
     </button>
+
 
     <button
       data-tab="statusScreen">
+
       📊 Status
+
     </button>
+
 
   </nav>
 
+
 </main>
+
+</div>
 
 
 <!-- TOD -->
+
+
 <div
   class="overlay"
   id="deathOverlay">
 
+
   <div class="modal">
+
 
     <div
       style="
         font-size:40px;
       ">
+
       ☠️
+
     </div>
 
+
     <h2>
+
       Du bist gefallen
+
     </h2>
+
 
     <p id="deathText">
     </p>
@@ -1619,19 +2366,24 @@ button{
 
     <p>
 
+
       <b
         style="
           color:var(--purple);
         ">
 
         🔮
+
         <span id="earnedSouls">
+
           0
+
         </span>
 
         Seelen erhalten
 
       </b>
+
 
     </p>
 
@@ -1641,69 +2393,108 @@ button{
 
       <button id="permDmgBtn">
 
+
         <span>
 
+
           <b>
+
             ⚔️ Ewige Klinge
+
           </b>
+
 
           <br>
 
+
           <small>
+
             +1 Startschaden
+
           </small>
 
+
         </span>
 
+
         <span>
+
           3 🔮
+
         </span>
+
 
       </button>
 
 
       <button id="permHpBtn">
 
+
         <span>
 
+
           <b>
+
             ❤️ Ewiges Blut
+
           </b>
+
 
           <br>
 
+
           <small>
+
             +10 Start-Leben
+
           </small>
 
+
         </span>
 
+
         <span>
+
           3 🔮
+
         </span>
+
 
       </button>
 
 
       <button id="permCritBtn">
 
+
         <span>
 
+
           <b>
+
             💥 Schicksalsring
+
           </b>
+
 
           <br>
 
+
           <small>
+
             +1% Start-Krit
+
           </small>
 
+
         </span>
 
+
         <span>
+
           4 🔮
+
         </span>
+
 
       </button>
 
@@ -1714,10 +2505,14 @@ button{
     <button
       class="modalBtn"
       id="newRunBtn">
+
       NEUER RUN
+
     </button>
 
+
   </div>
+
 
 </div>
 
@@ -1726,32 +2521,387 @@ button{
 
 (() => {
 
+
 const $ =
   id =>
     document.getElementById(id);
 
 
+/* =========================
+   IPHONE VIEWPORT
+   ========================= */
+
+
+function readSafeInsets(){
+
+  const cs =
+    getComputedStyle(
+      $("safeProbe")
+    );
+
+
+  return{
+
+    top:
+      parseFloat(
+        cs.paddingTop
+      )
+      ||
+      0,
+
+    bottom:
+      parseFloat(
+        cs.paddingBottom
+      )
+      ||
+      0
+
+  };
+
+}
+
+
+function syncViewport(){
+
+  const vv =
+    window.visualViewport;
+
+
+  const rawTop =
+
+    vv
+
+    ? vv.offsetTop
+
+    : 0;
+
+
+  const rawHeight =
+
+    vv
+
+    ? vv.height
+
+    : window.innerHeight;
+
+
+  const safe =
+    readSafeInsets();
+
+
+  /*
+    SAFE AREA WIRD
+    GENAU EINMAL
+    ABGEZOGEN
+  */
+
+
+  const appTop =
+    Math.round(
+
+      rawTop
+      +
+      safe.top
+
+    );
+
+
+  const appHeight =
+    Math.max(
+
+      320,
+
+      Math.round(
+
+        rawHeight
+
+        -
+
+        safe.top
+
+        -
+
+        safe.bottom
+
+      )
+
+    );
+
+
+  document
+  .documentElement
+  .style
+  .setProperty(
+
+    "--app-top",
+
+    appTop
+    +
+    "px"
+
+  );
+
+
+  document
+  .documentElement
+  .style
+  .setProperty(
+
+    "--app-height",
+
+    appHeight
+    +
+    "px"
+
+  );
+
+
+  /*
+    AUTOMATISCH KOMPAKTER
+    BEI KLEINER HÖHE
+  */
+
+
+  if(
+    appHeight < 620
+  ){
+
+    document.body.dataset.size =
+      "tiny";
+
+  }
+
+  else if(
+    appHeight < 730
+  ){
+
+    document.body.dataset.size =
+      "compact";
+
+  }
+
+  else{
+
+    document.body.dataset.size =
+      "normal";
+
+  }
+
+
+  const info =
+    $("viewportInfo");
+
+
+  if(info){
+
+    info.textContent =
+
+      "sichtbar "
+
+      +
+
+      Math.round(
+        rawHeight
+      )
+
+      +
+
+      " px · oben "
+
+      +
+
+      Math.round(
+        safe.top
+      )
+
+      +
+
+      " px · unten "
+
+      +
+
+      Math.round(
+        safe.bottom
+      )
+
+      +
+
+      " px · Spiel "
+
+      +
+
+      appHeight
+
+      +
+
+      " px";
+
+  }
+
+}
+
+
+/* BEIM START MESSEN */
+
+syncViewport();
+
+
+requestAnimationFrame(
+  syncViewport
+);
+
+
+/* BEI ÄNDERUNGEN NEU MESSEN */
+
+window.addEventListener(
+
+  "resize",
+
+  syncViewport
+
+);
+
+
+window.addEventListener(
+
+  "orientationchange",
+
+  () =>
+    setTimeout(
+      syncViewport,
+      80
+    )
+
+);
+
+
+if(
+  window.visualViewport
+){
+
+  window
+  .visualViewport
+  .addEventListener(
+
+    "resize",
+
+    syncViewport
+
+  );
+
+
+  window
+  .visualViewport
+  .addEventListener(
+
+    "scroll",
+
+    syncViewport
+
+  );
+
+}
+
+
+document
+.addEventListener(
+
+  "visibilitychange",
+
+  () => {
+
+    if(
+      !document.hidden
+    ){
+
+      setTimeout(
+        syncViewport,
+        50
+      );
+
+    }
+
+  }
+
+);
+
+
+/* =========================
+   SPIEL
+   ========================= */
+
+
 const ENEMIES = [
 
-  ["Dungeon-Ratte","🐀"],
-  ["Schleim","🟢"],
-  ["Fledermaus","🦇"],
-  ["Goblin","👺"],
-  ["Skelett","💀"],
-  ["Spinne","🕷️"],
-  ["Ork","👹"],
-  ["Geist","👻"],
-  ["Hexer","🧛"]
+  [
+    "Dungeon-Ratte",
+    "🐀"
+  ],
+
+  [
+    "Schleim",
+    "🟢"
+  ],
+
+  [
+    "Fledermaus",
+    "🦇"
+  ],
+
+  [
+    "Goblin",
+    "👺"
+  ],
+
+  [
+    "Skelett",
+    "💀"
+  ],
+
+  [
+    "Spinne",
+    "🕷️"
+  ],
+
+  [
+    "Ork",
+    "👹"
+  ],
+
+  [
+    "Geist",
+    "👻"
+  ],
+
+  [
+    "Hexer",
+    "🧛"
+  ]
 
 ];
 
 
 const BOSSES = [
 
-  ["Oger-König","👹"],
-  ["Flammenwächter","🐲"],
-  ["Blutmagier","🧛"],
-  ["Höllenfürst","👿"]
+  [
+    "Oger-König",
+    "👹"
+  ],
+
+  [
+    "Flammenwächter",
+    "🐲"
+  ],
+
+  [
+    "Blutmagier",
+    "🧛"
+  ],
+
+  [
+    "Höllenfürst",
+    "👿"
+  ]
 
 ];
 
@@ -1839,104 +2989,129 @@ const s = {
 };
 
 
-let autoMeter = 0;
+let autoMeter =
+  0;
 
-let enemyMeter = 0;
+
+let enemyMeter =
+  0;
+
 
 let lastFrame =
   performance.now();
 
-let lastTap = 0;
+
+let lastTap =
+  0;
+
+
+/* WERTE */
 
 
 const totalDamage =
   () =>
-    s.damage +
-    s.swordDrops * 2;
+    s.damage
+    +
+    s.swordDrops
+    *
+    2;
 
 
 const totalArmor =
   () =>
-    s.armor +
+    s.armor
+    +
     s.armorDrops;
 
 
 const totalCrit =
   () =>
     Math.min(
+
       .5,
-      s.crit +
-      s.ringDrops * .01
+
+      s.crit
+
+      +
+
+      s.ringDrops
+      *
+      .01
+
     );
 
 
-/* TOUCH + MAUS */
+/* TOUCH */
+
+
 function bindTap(
   el,
   fn
 ){
 
-  let fired = false;
+  let locked =
+    false;
 
 
   el.addEventListener(
-    "pointerdown",
+
+    "pointerup",
+
     e => {
 
       e.preventDefault();
 
-      fired = true;
 
-      fn(e);
-
-    }
-  );
-
-
-  el.addEventListener(
-    "touchstart",
-    e => {
-
-      if(fired){
-
-        fired = false;
-
+      if(
+        locked
+      ){
         return;
-
       }
 
-      e.preventDefault();
+
+      locked =
+        true;
+
 
       fn(e);
 
-    },
-    {
-      passive:false
+
+      setTimeout(
+        () =>
+          locked = false,
+        60
+      );
+
     }
+
   );
 
 
   el.addEventListener(
+
     "click",
+
     e => {
 
-      if(fired){
-
-        fired = false;
-
+      if(
+        locked
+      ){
         return;
-
       }
+
 
       fn(e);
 
     }
+
   );
 
 }
 
 
-/* GEGNER ERZEUGEN */
+/* GEGNER */
+
+
 function spawnEnemy(){
 
   s.boss =
@@ -1944,24 +3119,49 @@ function spawnEnemy(){
 
 
   const pool =
+
     s.boss
+
     ? BOSSES
+
     : ENEMIES;
 
 
   const idx =
+
     s.boss
 
-    ? (
-        (
-          s.floor / 5
-        ) - 1
-      | 0
-      ) % pool.length
+    ?
 
-    : (
-        s.floor - 1
-      ) % pool.length;
+    (
+      (
+        (
+          s.floor
+          /
+          5
+        )
+        -
+        1
+      )
+      |
+      0
+    )
+
+    %
+
+    pool.length
+
+    :
+
+    (
+      s.floor
+      -
+      1
+    )
+
+    %
+
+    pool.length;
 
 
   s.enemy =
@@ -1970,17 +3170,24 @@ function spawnEnemy(){
 
   const scale =
     Math.pow(
+
       1.19,
+
       s.floor - 1
+
     );
 
 
   s.enemyMaxHp =
+
     Math.floor(
 
       (
-        24 +
-        s.floor * 5
+        24
+        +
+        s.floor
+        *
+        5
       )
 
       *
@@ -1991,8 +3198,10 @@ function spawnEnemy(){
 
       (
         s.boss
-        ? 3.1
-        : 1
+        ?
+        3.1
+        :
+        1
       )
 
     );
@@ -2003,44 +3212,63 @@ function spawnEnemy(){
 
 
   s.enemyDamage =
+
     Math.floor(
 
       (
-        4 +
-        s.floor * 1.55
+        4
+        +
+        s.floor
+        *
+        1.55
       )
 
       *
 
       (
         s.boss
-        ? 1.35
-        : 1
+        ?
+        1.35
+        :
+        1
       )
 
     );
 
 
-  s.attackCount = 0;
+  s.attackCount =
+    0;
 
-  s.telegraphing = false;
 
-  enemyMeter = 0;
+  s.telegraphing =
+    false;
+
+
+  enemyMeter =
+    0;
 
 
   $("arena")
-    .classList
-    .toggle(
-      "boss",
-      s.boss
-    );
+  .classList
+  .toggle(
+
+    "boss",
+
+    s.boss
+
+  );
 
 
   $("enemyType")
-    .textContent =
-      s.boss
-      ? "BOSS"
-      : "NORMAL";
+  .textContent =
+
+    s.boss
+
+    ?
+    "BOSS"
+
+    :
+    "NORMAL";
 
 
   render();
@@ -2048,7 +3276,9 @@ function spawnEnemy(){
 }
 
 
-/* EFFEKT HELFER */
+/* EFFEKTE */
+
+
 function fxClass(
   id,
   c
@@ -2057,11 +3287,18 @@ function fxClass(
   const el =
     $(id);
 
-  el.classList.remove(c);
+
+  el
+  .classList
+  .remove(c);
+
 
   void el.offsetWidth;
 
-  el.classList.add(c);
+
+  el
+  .classList
+  .add(c);
 
 }
 
@@ -2081,7 +3318,9 @@ function floating(
 
 
   el.className =
-    "float " + cls;
+    "float "
+    +
+    cls;
 
 
   el.textContent =
@@ -2089,21 +3328,28 @@ function floating(
 
 
   el.style.left =
-    x + "%";
+    x
+    +
+    "%";
 
 
   el.style.top =
-    y + "%";
+    y
+    +
+    "%";
 
 
   $("arena")
-    .appendChild(el);
+  .appendChild(el);
 
 
   setTimeout(
+
     () =>
       el.remove(),
+
     750
+
   );
 
 }
@@ -2132,8 +3378,8 @@ function flash(id){
 function message(t){
 
   $("message")
-    .textContent =
-      t;
+  .textContent =
+    t;
 
 
   clearTimeout(
@@ -2143,32 +3389,40 @@ function message(t){
 
   message.t =
     setTimeout(
+
       () => {
 
         $("message")
-          .textContent =
+        .textContent =
 
-            s.boss
+          s.boss
 
-            ? "⚠️ Bosskampf!"
+          ?
+          "⚠️ Bosskampf!"
 
-            : "Tippe auf den Gegner.";
+          :
+          "Tippe auf den Gegner.";
 
       },
+
       2200
+
     );
 
 }
 
 
-/* SPIELER-ANGRIFF */
+/* SPIELERANGRIFF */
+
+
 function playerAttack(
   mult=1,
   manual=false
 ){
 
   if(
-    s.dead ||
+    s.dead
+    ||
     s.enemyHp <= 0
   ){
     return;
@@ -2177,9 +3431,11 @@ function playerAttack(
 
   let dmg =
     Math.floor(
+
       totalDamage()
       *
       mult
+
     );
 
 
@@ -2189,17 +3445,25 @@ function playerAttack(
     totalCrit();
 
 
-  if(crit){
+  if(
+    crit
+  ){
 
-    dmg *= 3;
+    dmg *=
+      3;
 
   }
 
 
   s.enemyHp =
     Math.max(
+
       0,
-      s.enemyHp - dmg
+
+      s.enemyHp
+      -
+      dmg
+
     );
 
 
@@ -2219,8 +3483,12 @@ function playerAttack(
 
     (
       crit
-      ? "KRIT! -"
-      : "-"
+
+      ?
+      "KRIT! -"
+
+      :
+      "-"
     )
 
     +
@@ -2228,24 +3496,36 @@ function playerAttack(
     dmg,
 
     52,
+
     48,
 
     crit
-    ? "crit"
-    : ""
+
+    ?
+    "crit"
+
+    :
+    ""
 
   );
 
 
   if(
-    manual &&
+    manual
+    &&
     navigator.vibrate
   ){
 
     navigator.vibrate(
+
       crit
-      ? 20
-      : 7
+
+      ?
+      20
+
+      :
+      7
+
     );
 
   }
@@ -2292,13 +3572,16 @@ function manualAttack(){
 }
 
 
-/* GEGNER-ANGRIFF */
+/* GEGNERANGRIFF */
+
+
 function enemyAttack(
   heavy=false
 ){
 
   if(
-    s.dead ||
+    s.dead
+    ||
     s.enemyHp <= 0
   ){
     return;
@@ -2312,16 +3595,24 @@ function enemyAttack(
 
 
   let raw =
+
     s.enemyDamage
+
     *
+
     (
       heavy
-      ? 2.25
-      : 1
+
+      ?
+      2.25
+
+      :
+      1
     );
 
 
   let dmg =
+
     Math.max(
 
       1,
@@ -2348,12 +3639,17 @@ function enemyAttack(
   ){
 
     dmg =
+
       Math.max(
 
         1,
 
         Math.floor(
-          dmg * .3
+
+          dmg
+          *
+          .3
+
         )
 
       );
@@ -2362,14 +3658,22 @@ function enemyAttack(
 
 
   s.hp =
+
     Math.max(
+
       0,
-      s.hp - dmg
+
+      s.hp
+      -
+      dmg
+
     );
 
 
   floating(
-    "-" + dmg,
+    "-"
+    +
+    dmg,
     28,
     82,
     "enemyDmg"
@@ -2389,9 +3693,15 @@ function enemyAttack(
   ){
 
     navigator.vibrate(
+
       heavy
-      ? 45
-      : 18
+
+      ?
+      45
+
+      :
+      18
+
     );
 
   }
@@ -2411,11 +3721,14 @@ function enemyAttack(
 }
 
 
-/* SCHWERER BOSS-ANGRIFF */
+/* SCHWERER ANGRIFF */
+
+
 function heavyAttack(){
 
   if(
-    s.dead ||
+    s.dead
+    ||
     s.telegraphing
   ){
     return;
@@ -2427,20 +3740,21 @@ function heavyAttack(){
 
 
   $("telegraph")
-    .classList
-    .add(
-      "show"
-    );
+  .classList
+  .add(
+    "show"
+  );
 
 
   setTimeout(
+
     () => {
 
       $("telegraph")
-        .classList
-        .remove(
-          "show"
-        );
+      .classList
+      .remove(
+        "show"
+      );
 
 
       s.telegraphing =
@@ -2452,28 +3766,39 @@ function heavyAttack(){
       );
 
     },
+
     850
+
   );
 
 }
 
 
-/* KAMPF GEWONNEN */
+/* SIEG */
+
+
 function winFight(){
 
   const reward =
 
     Math.floor(
-      7 +
-      s.floor * 2.4
+
+      7
+      +
+      s.floor
+      *
+      2.4
+
     )
 
     *
 
     (
       s.boss
-      ? 4
-      : 1
+      ?
+      4
+      :
+      1
     );
 
 
@@ -2485,23 +3810,36 @@ function winFight(){
 
 
   floating(
-    "+" +
-    reward +
+
+    "+"
+    +
+    reward
+    +
     " 🪙",
+
     50,
+
     57,
+
     "goldText"
+
   );
 
 
   if(
+
     Math.random()
+
     <
+
     (
       s.boss
-      ? .8
-      : .18
+      ?
+      .8
+      :
+      .18
     )
+
   ){
 
     const r =
@@ -2514,11 +3852,13 @@ function winFight(){
 
       s.swordDrops++;
 
+
       message(
         "🗡️ Schwert: +2 Schaden"
       );
 
     }
+
 
     else if(
       r < .67
@@ -2526,11 +3866,13 @@ function winFight(){
 
       s.armorDrops++;
 
+
       message(
         "🛡️ Rüstung: +1"
       );
 
     }
+
 
     else if(
       r < .9
@@ -2538,15 +3880,18 @@ function winFight(){
 
       s.ringDrops++;
 
+
       message(
         "💍 Ring: +1% Krit"
       );
 
     }
 
+
     else{
 
       s.potions++;
+
 
       message(
         "🧪 Trank gefunden"
@@ -2556,15 +3901,18 @@ function winFight(){
 
   }
 
+
   else{
 
     message(
 
       s.boss
 
-      ? "🏆 Boss besiegt!"
+      ?
+      "🏆 Boss besiegt!"
 
-      : "☠️ Gegner besiegt."
+      :
+      "☠️ Gegner besiegt."
 
     );
 
@@ -2575,8 +3923,11 @@ function winFight(){
 
 
   setTimeout(
+
     spawnEnemy,
+
     220
+
   );
 
 
@@ -2588,6 +3939,8 @@ function winFight(){
 
 
 /* TOD */
+
+
 function die(){
 
   if(
@@ -2602,16 +3955,23 @@ function die(){
 
 
   const earned =
+
     Math.max(
 
       1,
 
       Math.floor(
+
         (
-          s.floor - 1
+          s.floor
+          -
+          1
         )
+
         /
+
         4
+
       )
 
     );
@@ -2622,37 +3982,37 @@ function die(){
 
 
   $("earnedSouls")
-    .textContent =
-      earned;
+  .textContent =
+    earned;
 
 
   $("deathText")
-    .textContent =
+  .textContent =
 
-      "Ebene "
+    "Ebene "
 
-      +
+    +
 
-      s.floor
+    s.floor
 
-      +
+    +
 
-      " · "
+    " · "
 
-      +
+    +
 
-      s.kills
+    s.kills
 
-      +
+    +
 
-      " Gegner besiegt";
+    " Gegner besiegt";
 
 
   $("deathOverlay")
-    .classList
-    .add(
-      "show"
-    );
+  .classList
+  .add(
+    "show"
+  );
 
 
   updatePerm();
@@ -2665,7 +4025,9 @@ function die(){
 }
 
 
-/* BLOCKEN */
+/* FÄHIGKEITEN */
+
+
 function useBlock(){
 
   const n =
@@ -2673,7 +4035,8 @@ function useBlock(){
 
 
   if(
-    n < s.blockReady ||
+    n < s.blockReady
+    ||
     s.dead
   ){
     return;
@@ -2681,11 +4044,15 @@ function useBlock(){
 
 
   s.blockUntil =
-    n + 3000;
+    n
+    +
+    3000;
 
 
   s.blockReady =
-    n + 10000;
+    n
+    +
+    10000;
 
 
   message(
@@ -2698,7 +4065,6 @@ function useBlock(){
 }
 
 
-/* FEUERBALL */
 function useFire(){
 
   const n =
@@ -2706,7 +4072,8 @@ function useFire(){
 
 
   if(
-    n < s.fireReady ||
+    n < s.fireReady
+    ||
     s.dead
   ){
     return;
@@ -2714,7 +4081,9 @@ function useFire(){
 
 
   s.fireReady =
-    n + 8000;
+    n
+    +
+    8000;
 
 
   fxClass(
@@ -2724,20 +4093,30 @@ function useFire(){
 
 
   setTimeout(
+
     () => {
 
       let d =
+
         Math.floor(
+
           totalDamage()
           *
           5
+
         );
 
 
       s.enemyHp =
+
         Math.max(
+
           0,
-          s.enemyHp - d
+
+          s.enemyHp
+          -
+          d
+
         );
 
 
@@ -2752,12 +4131,19 @@ function useFire(){
 
 
       floating(
-        "-" +
-        d +
+
+        "-"
+        +
+        d
+        +
         " 🔥",
+
         55,
+
         47,
+
         "crit"
+
       );
 
 
@@ -2776,13 +4162,14 @@ function useFire(){
       render();
 
     },
+
     400
+
   );
 
 }
 
 
-/* HEILZAUBER */
 function useHeal(){
 
   const n =
@@ -2790,8 +4177,10 @@ function useHeal(){
 
 
   if(
-    n < s.healReady ||
-    s.dead ||
+    n < s.healReady
+    ||
+    s.dead
+    ||
     s.hp >= s.maxHp
   ){
     return;
@@ -2799,31 +4188,49 @@ function useHeal(){
 
 
   s.healReady =
-    n + 14000;
+    n
+    +
+    14000;
 
 
   const h =
+
     Math.ceil(
+
       s.maxHp
       *
       .35
+
     );
 
 
   s.hp =
+
     Math.min(
+
       s.maxHp,
-      s.hp + h
+
+      s.hp
+      +
+      h
+
     );
 
 
   floating(
-    "+" +
-    h +
+
+    "+"
+    +
+    h
+    +
     " ❤️",
+
     28,
+
     82,
+
     "heal"
+
   );
 
 
@@ -2842,12 +4249,13 @@ function useHeal(){
 }
 
 
-/* TRANK */
 function usePotion(){
 
   if(
-    s.potions <= 0 ||
-    s.dead ||
+    s.potions <= 0
+    ||
+    s.dead
+    ||
     s.hp >= s.maxHp
   ){
     return;
@@ -2858,27 +4266,43 @@ function usePotion(){
 
 
   const h =
+
     Math.ceil(
+
       s.maxHp
       *
       .3
+
     );
 
 
   s.hp =
+
     Math.min(
+
       s.maxHp,
-      s.hp + h
+
+      s.hp
+      +
+      h
+
     );
 
 
   floating(
-    "+" +
-    h +
+
+    "+"
+    +
+    h
+    +
     " ❤️",
+
     28,
+
     82,
+
     "heal"
+
   );
 
 
@@ -2893,10 +4317,13 @@ function usePotion(){
 
 
 /* SHOP */
+
+
 function buyDamage(){
 
   if(
-    s.gold < s.dmgCost ||
+    s.gold < s.dmgCost
+    ||
     s.dead
   ){
     return;
@@ -2912,12 +4339,15 @@ function buyDamage(){
 
 
   s.dmgCost =
+
     Math.floor(
+
       s.dmgCost
       *
       1.62
       +
       3
+
     );
 
 
@@ -2929,7 +4359,8 @@ function buyDamage(){
 function buyHp(){
 
   if(
-    s.gold < s.hpCost ||
+    s.gold < s.hpCost
+    ||
     s.dead
   ){
     return;
@@ -2945,19 +4376,28 @@ function buyHp(){
 
 
   s.hp =
+
     Math.min(
+
       s.maxHp,
-      s.hp + 15
+
+      s.hp
+      +
+      15
+
     );
 
 
   s.hpCost =
+
     Math.floor(
+
       s.hpCost
       *
       1.62
       +
       4
+
     );
 
 
@@ -2969,7 +4409,8 @@ function buyHp(){
 function buyArmor(){
 
   if(
-    s.gold < s.armorCost ||
+    s.gold < s.armorCost
+    ||
     s.dead
   ){
     return;
@@ -2984,12 +4425,15 @@ function buyArmor(){
 
 
   s.armorCost =
+
     Math.floor(
+
       s.armorCost
       *
       1.7
       +
       5
+
     );
 
 
@@ -2999,6 +4443,8 @@ function buyArmor(){
 
 
 /* PERMANENTE UPGRADES */
+
+
 function buyPermDamage(){
 
   if(
@@ -3083,35 +4529,45 @@ function buyPermCrit(){
 function updatePerm(){
 
   $("permDmgBtn")
-    .disabled =
-      meta.souls < 3;
+  .disabled =
+    meta.souls
+    <
+    3;
 
 
   $("permHpBtn")
-    .disabled =
-      meta.souls < 3;
+  .disabled =
+    meta.souls
+    <
+    3;
 
 
   $("permCritBtn")
-    .disabled =
-      meta.souls < 4;
+  .disabled =
+    meta.souls
+    <
+    4;
 
 
   $("souls")
-    .textContent =
-      meta.souls;
+  .textContent =
+    meta.souls;
 
 }
 
 
 /* NEUER RUN */
+
+
 function newRun(){
 
   meta.runNumber++;
 
 
   Object.assign(
+
     s,
+
     {
 
       floor:1,
@@ -3181,14 +4637,15 @@ function newRun(){
       telegraphing:false
 
     }
+
   );
 
 
   $("deathOverlay")
-    .classList
-    .remove(
-      "show"
-    );
+  .classList
+  .remove(
+    "show"
+  );
 
 
   spawnEnemy();
@@ -3203,6 +4660,8 @@ function newRun(){
 
 
 /* COOLDOWN */
+
+
 function cd(
   text,
   fill,
@@ -3211,415 +4670,455 @@ function cd(
 ){
 
   const left =
+
     Math.max(
+
       0,
+
       ready
       -
       Date.now()
+
     );
 
 
   $(fill)
-    .style
-    .height =
+  .style
+  .height =
 
-      Math.min(
-        100,
-        left
-        /
-        max
-        *
-        100
-      )
+    Math.min(
 
-      +
+      100,
 
-      "%";
+      left
+      /
+      max
+      *
+      100
+
+    )
+
+    +
+
+    "%";
 
 
   $(text)
-    .textContent =
+  .textContent =
 
-      left > 0
+    left > 0
 
-      ? (
-          left
-          /
-          1000
-        )
-        .toFixed(1)
+    ?
 
-      : "";
+    (
+      left
+      /
+      1000
+    )
+    .toFixed(1)
+
+    :
+
+    "";
 
 }
 
 
-/* ANZEIGE AKTUALISIEREN */
+/* ANZEIGE */
+
+
 function render(){
 
   $("floor")
-    .textContent =
-      s.floor;
+  .textContent =
+    s.floor;
 
 
   $("gold")
-    .textContent =
-      Math.floor(
-        s.gold
-      );
+  .textContent =
+    Math.floor(
+      s.gold
+    );
 
 
   $("souls")
-    .textContent =
-      meta.souls;
+  .textContent =
+    meta.souls;
 
 
   $("enemyName")
-    .textContent =
-      s.enemy[0];
+  .textContent =
+    s.enemy[0];
 
 
   $("enemyEmoji")
-    .textContent =
-      s.enemy[1];
+  .textContent =
+    s.enemy[1];
 
 
   $("enemyHpFill")
-    .style
-    .width =
+  .style
+  .width =
 
-      Math.max(
-        0,
-        s.enemyHp
-        /
-        s.enemyMaxHp
-        *
-        100
-      )
+    Math.max(
 
-      +
+      0,
 
-      "%";
+      s.enemyHp
+      /
+      s.enemyMaxHp
+      *
+      100
+
+    )
+
+    +
+
+    "%";
 
 
   $("enemyHpText")
-    .textContent =
+  .textContent =
 
-      Math.ceil(
-        s.enemyHp
-      )
+    Math.ceil(
+      s.enemyHp
+    )
 
-      +
+    +
 
-      " / "
+    " / "
 
-      +
+    +
 
-      s.enemyMaxHp;
+    s.enemyMaxHp;
 
 
   $("playerHpFill")
-    .style
-    .width =
+  .style
+  .width =
 
-      Math.max(
-        0,
-        s.hp
-        /
-        s.maxHp
-        *
-        100
-      )
+    Math.max(
 
-      +
+      0,
 
-      "%";
+      s.hp
+      /
+      s.maxHp
+      *
+      100
+
+    )
+
+    +
+
+    "%";
 
 
   $("playerHpText")
-    .textContent =
+  .textContent =
 
-      Math.ceil(
-        s.hp
-      )
+    Math.ceil(
+      s.hp
+    )
 
-      +
+    +
 
-      " / "
+    " / "
 
-      +
+    +
 
-      s.maxHp;
+    s.maxHp;
 
 
   $("armorText")
-    .textContent =
+  .textContent =
 
-      "🛡️ "
+    "🛡️ "
 
-      +
+    +
 
-      totalArmor();
+    totalArmor();
 
 
   $("playerStats")
-    .textContent =
+  .textContent =
 
-      "⚔️ "
+    "⚔️ "
 
-      +
+    +
 
-      totalDamage()
+    totalDamage()
 
-      +
+    +
 
-      " · 💥 "
+    " · 💥 "
 
-      +
+    +
 
-      Math.round(
-        totalCrit()
-        *
-        100
-      )
+    Math.round(
+      totalCrit()
+      *
+      100
+    )
 
-      +
+    +
 
-      "% · 🏹 "
+    "% · 🏹 "
 
-      +
+    +
 
-      s.autoRate.toFixed(1)
+    s.autoRate
+    .toFixed(1)
 
-      +
+    +
 
-      "/s";
+    "/s";
 
 
   $("potions")
-    .textContent =
-      s.potions;
+  .textContent =
+    s.potions;
 
 
   $("runBonuses")
-    .textContent =
+  .textContent =
 
-      "🗡️ "
+    "🗡️ "
 
-      +
+    +
 
-      s.swordDrops
+    s.swordDrops
 
-      +
+    +
 
-      " · 🛡️ "
+    " · 🛡️ "
 
-      +
+    +
 
-      s.armorDrops
+    s.armorDrops
 
-      +
+    +
 
-      " · 💍 "
+    " · 💍 "
 
-      +
+    +
 
-      s.ringDrops
+    s.ringDrops
 
-      +
+    +
 
-      " · 🧪 "
+    " · 🧪 "
 
-      +
+    +
 
-      s.potions;
+    s.potions;
 
 
   $("dmgPrice")
-    .textContent =
+  .textContent =
 
-      s.dmgCost
+    s.dmgCost
 
-      +
+    +
 
-      " 🪙";
+    " 🪙";
 
 
   $("hpPrice")
-    .textContent =
+  .textContent =
 
-      s.hpCost
+    s.hpCost
 
-      +
+    +
 
-      " 🪙";
+    " 🪙";
 
 
   $("armorPrice")
-    .textContent =
+  .textContent =
 
-      s.armorCost
+    s.armorCost
 
-      +
+    +
 
-      " 🪙";
+    " 🪙";
 
 
   $("dmgBtn")
-    .disabled =
+  .disabled =
 
-      s.gold
-      <
-      s.dmgCost
+    s.gold
+    <
+    s.dmgCost
 
-      ||
+    ||
 
-      s.dead;
+    s.dead;
 
 
   $("hpBtn")
-    .disabled =
+  .disabled =
 
-      s.gold
-      <
-      s.hpCost
+    s.gold
+    <
+    s.hpCost
 
-      ||
+    ||
 
-      s.dead;
+    s.dead;
 
 
   $("armorBtn")
-    .disabled =
+  .disabled =
 
-      s.gold
-      <
-      s.armorCost
+    s.gold
+    <
+    s.armorCost
 
-      ||
+    ||
 
-      s.dead;
+    s.dead;
 
 
   $("potionBtn")
-    .disabled =
+  .disabled =
 
-      s.potions <= 0
+    s.potions <= 0
 
-      ||
+    ||
 
-      s.hp >= s.maxHp
+    s.hp >= s.maxHp
 
-      ||
+    ||
 
-      s.dead;
+    s.dead;
 
 
   $("statDamage")
-    .textContent =
-      totalDamage();
+  .textContent =
+    totalDamage();
 
 
   $("statCrit")
-    .textContent =
+  .textContent =
 
-      Math.round(
-        totalCrit()
-        *
-        100
-      )
+    Math.round(
+      totalCrit()
+      *
+      100
+    )
 
-      +
+    +
 
-      "%";
+    "%";
 
 
   $("statArmor")
-    .textContent =
-      totalArmor();
+  .textContent =
+    totalArmor();
 
 
   $("runNumber")
-    .textContent =
-      meta.runNumber;
+  .textContent =
+    meta.runNumber;
 
 
   cd(
+
     "blockCdText",
+
     "blockCd",
+
     s.blockReady,
+
     10000
+
   );
 
 
   cd(
+
     "fireCdText",
+
     "fireCd",
+
     s.fireReady,
+
     8000
+
   );
 
 
   cd(
+
     "healCdText",
+
     "healCd",
+
     s.healReady,
+
     14000
+
   );
 
 
   $("blockBtn")
-    .disabled =
+  .disabled =
 
-      Date.now()
-      <
-      s.blockReady
+    Date.now()
+    <
+    s.blockReady
 
-      ||
+    ||
 
-      s.dead;
+    s.dead;
 
 
   $("fireBtn")
-    .disabled =
+  .disabled =
 
-      Date.now()
-      <
-      s.fireReady
+    Date.now()
+    <
+    s.fireReady
 
-      ||
+    ||
 
-      s.dead;
+    s.dead;
 
 
   $("healBtn")
-    .disabled =
+  .disabled =
 
-      Date.now()
-      <
-      s.healReady
+    Date.now()
+    <
+    s.healReady
 
-      ||
+    ||
 
-      s.dead
+    s.dead
 
-      ||
+    ||
 
-      s.hp >= s.maxHp;
+    s.hp >= s.maxHp;
 
 }
 
 
 /* SPIELSCHLEIFE */
+
+
 function loop(now){
 
   const dt =
+
     (
       now
       -
       lastFrame
     )
+
     /
+
     1000;
 
 
@@ -3631,7 +5130,6 @@ function loop(now){
     !s.dead
   ){
 
-    /* AUTO-ANGRIFF */
     autoMeter +=
 
       dt
@@ -3661,7 +5159,6 @@ function loop(now){
     }
 
 
-    /* GEGNERANGRIFF */
     enemyMeter +=
 
       dt
@@ -3669,22 +5166,30 @@ function loop(now){
       /
 
       Math.max(
+
         .92,
+
         1.85
         -
-        s.floor * .018
+        s.floor
+        *
+        .018
+
       );
 
 
     if(
+
       enemyMeter >= 1
 
       &&
 
       !s.telegraphing
+
     ){
 
-      enemyMeter = 0;
+      enemyMeter =
+        0;
 
 
       s.attackCount++;
@@ -3696,7 +5201,11 @@ function loop(now){
 
         &&
 
-        s.attackCount % 4 === 0
+        s.attackCount
+        %
+        4
+        ===
+        0
 
       ){
 
@@ -3715,7 +5224,6 @@ function loop(now){
     }
 
 
-    /* BRENNEN */
     if(
 
       s.burnTicks > 0
@@ -3742,35 +5250,49 @@ function loop(now){
 
 
       const d =
+
         Math.max(
 
           1,
 
           Math.floor(
+
             totalDamage()
             *
             1.1
+
           )
 
         );
 
 
       s.enemyHp =
+
         Math.max(
+
           0,
-          s.enemyHp - d
+
+          s.enemyHp
+          -
+          d
+
         );
 
 
       floating(
+
         "-"
         +
         d
         +
         " 🔥",
+
         56,
+
         50,
+
         "enemyDmg"
+
       );
 
 
@@ -3798,6 +5320,8 @@ function loop(now){
 
 
 /* SPEICHERN */
+
+
 function save(
   silent=false
 ){
@@ -3838,13 +5362,19 @@ function save(
 
 
 /* LADEN */
+
+
 function load(){
 
   try{
 
     const raw =
-      localStorage.getItem(
+
+      localStorage
+      .getItem(
+
         "lastDungeonMobileSave"
+
       );
 
 
@@ -3859,33 +5389,48 @@ function load(){
 
 
       Object.assign(
+
         meta,
-        d.meta || {}
+
+        d.meta
+        ||
+        {}
+
       );
 
 
       Object.assign(
+
         s,
-        d.s || {}
+
+        d.s
+        ||
+        {}
+
       );
 
 
       $("arena")
-        .classList
-        .toggle(
-          "boss",
-          s.boss
-        );
+      .classList
+      .toggle(
+
+        "boss",
+
+        s.boss
+
+      );
 
 
       $("enemyType")
-        .textContent =
+      .textContent =
 
-          s.boss
+        s.boss
 
-          ? "BOSS"
+        ?
+        "BOSS"
 
-          : "NORMAL";
+        :
+        "NORMAL";
 
 
       if(
@@ -3893,24 +5438,26 @@ function load(){
       ){
 
         $("deathOverlay")
-          .classList
-          .add(
-            "show"
-          );
+        .classList
+        .add(
+          "show"
+        );
 
 
         $("earnedSouls")
-          .textContent =
-            0;
+        .textContent =
+          0;
 
 
         $("deathText")
-          .textContent =
-            "Dein letzter Run ist beendet.";
+        .textContent =
+
+          "Dein letzter Run ist beendet.";
 
       }
 
     }
+
 
     else{
 
@@ -3919,6 +5466,7 @@ function load(){
     }
 
   }
+
 
   catch(e){
 
@@ -3931,23 +5479,34 @@ function load(){
 
   render();
 
+  syncViewport();
+
 }
 
 
-/* ALLES ZURÜCKSETZEN */
+/* RESET */
+
+
 function reset(){
 
   if(
+
     !confirm(
+
       "Wirklich ALLES löschen?"
+
     )
+
   ){
     return;
   }
 
 
-  localStorage.removeItem(
+  localStorage
+  .removeItem(
+
     "lastDungeonMobileSave"
+
   );
 
 
@@ -3956,7 +5515,9 @@ function reset(){
 }
 
 
-/* BUTTONS VERBINDEN */
+/* BUTTONS */
+
+
 bindTap(
   $("enemyBtn"),
   manualAttack
@@ -4042,27 +5603,37 @@ bindTap(
 );
 
 
-/* TABS */
+/* NAVIGATION */
+
+
 document
 .querySelectorAll(
   ".nav button"
 )
 .forEach(
-  btn => {
+
+  btn =>
 
     bindTap(
+
       btn,
+
       () => {
+
 
         document
         .querySelectorAll(
           ".nav button"
         )
         .forEach(
+
           b =>
-            b.classList.remove(
+            b
+            .classList
+            .remove(
               "active"
             )
+
         );
 
 
@@ -4078,10 +5649,14 @@ document
           ".screen"
         )
         .forEach(
+
           screen =>
-            screen.classList.remove(
+            screen
+            .classList
+            .remove(
               "active"
             )
+
         );
 
 
@@ -4093,28 +5668,39 @@ document
           "active"
         );
 
-      }
-    );
 
-  }
+        syncViewport();
+
+      }
+
+    )
+
 );
 
 
 /* AUTOSAVE */
+
+
 setInterval(
+
   () =>
     save(true),
+
   10000
+
 );
 
 
 /* START */
+
+
 load();
 
 
 requestAnimationFrame(
   loop
 );
+
 
 })();
 
